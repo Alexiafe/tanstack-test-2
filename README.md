@@ -4,9 +4,9 @@ A modern, full-stack starter template built with cutting-edge technologies for r
 
 ## ✨ Features
 
-- **🚀 [React 19](https://react.dev)** - Latest React with concurrent features
-- **⚡ [TanStack Start](https://tanstack.com/start/latest) + 🛣️ [Router](https://tanstack.com/router/latest)** - Full-stack React framework with type-safe routing
-- **🎨 [Tailwind CSS](https://tailwindcss.com/) + 🧩 [shadcn/ui](https://ui.shadcn.com/)** - Utility-first CSS framework with beautiful components
+- **⭐ [React 19](https://react.dev)** - Latest React with concurrent features
+- **🏝️ [TanStack Start](https://tanstack.com/start/latest) + [Router](https://tanstack.com/router/latest)** - Full-stack React framework with type-safe routing
+- **🎨 [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)** - Utility-first CSS framework with beautiful components
 - **🔐 [Supabase](https://supabase.com/)** - Authentication and Database with SSR
 
 ## 🚀 Quick Start

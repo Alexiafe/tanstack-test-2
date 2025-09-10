@@ -1,6 +1,7 @@
-import { redirect, createFileRoute } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
-import { getSupabaseServerClient } from '../utils/supabase'
+import { createFileRoute, redirect } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
+
+import { getSupabaseServerClient } from "../utils/supabase"
 
 const logoutFn = createServerFn().handler(async () => {
   const supabase = getSupabaseServerClient()
@@ -14,11 +15,11 @@ const logoutFn = createServerFn().handler(async () => {
   }
 
   throw redirect({
-    href: '/',
+    href: "/",
   })
 })
 
-export const Route = createFileRoute('/logout')({
+export const Route = createFileRoute("/logout")({
   preload: false,
   loader: () => logoutFn(),
 })

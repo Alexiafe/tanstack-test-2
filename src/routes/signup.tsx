@@ -1,13 +1,12 @@
-import { redirect, createFileRoute } from '@tanstack/react-router'
-import { createServerFn, useServerFn } from '@tanstack/react-start'
-import { useMutation } from '../hooks/useMutation'
-import { Auth } from '../components/Auth'
-import { getSupabaseServerClient } from '../utils/supabase'
+import { createFileRoute, redirect } from "@tanstack/react-router"
+import { createServerFn, useServerFn } from "@tanstack/react-start"
 
-export const signupFn = createServerFn({ method: 'POST' })
-  .validator(
-    (d: { email: string; password: string; redirectUrl?: string }) => d,
-  )
+import { Auth } from "../components/Auth"
+import { useMutation } from "../hooks/useMutation"
+import { getSupabaseServerClient } from "../utils/supabase"
+
+export const signupFn = createServerFn({ method: "POST" })
+  .validator((d: { email: string; password: string; redirectUrl?: string }) => d)
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient()
     const { error } = await supabase.auth.signUp({
@@ -23,11 +22,11 @@ export const signupFn = createServerFn({ method: 'POST' })
 
     // Redirect to the prev page stored in the "redirect" search param
     throw redirect({
-      href: data.redirectUrl || '/',
+      href: data.redirectUrl || "/",
     })
   })
 
-export const Route = createFileRoute('/signup')({
+export const Route = createFileRoute("/signup")({
   component: SignupComp,
 })
 
@@ -45,8 +44,8 @@ function SignupComp() {
 
         signupMutation.mutate({
           data: {
-            email: formData.get('email') as string,
-            password: formData.get('password') as string,
+            email: formData.get("email") as string,
+            password: formData.get("password") as string,
           },
         })
       }}

@@ -1,16 +1,10 @@
 import { notFound } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/react-start"
+import { Database } from "database.types"
 
 import { getSupabaseServerClient } from "./supabase"
 
-export type PostType = {
-  id: string
-  title: string
-  body: string
-  user_id: string
-  created_at: string
-  updated_at: string
-}
+export type PostType = Database["public"]["Tables"]["posts"]["Row"]
 
 export const fetchPost = createServerFn({ method: "GET" })
   .validator((d: string) => d)
@@ -35,8 +29,6 @@ export const fetchPost = createServerFn({ method: "GET" })
   })
 
 export const fetchPosts = createServerFn({ method: "GET" }).handler(async () => {
-  console.info("Fetching posts...")
-
   const supabase = getSupabaseServerClient()
 
   const { data: posts, error } = await supabase.from("posts").select("*").order("created_at", { ascending: false })
@@ -52,8 +44,6 @@ export const fetchPosts = createServerFn({ method: "GET" }).handler(async () => 
 export const createPost = createServerFn({ method: "POST" })
   .validator((d: { title: string; body: string }) => d)
   .handler(async ({ data: { title, body } }) => {
-    console.info("Creating new post...")
-
     const supabase = getSupabaseServerClient()
 
     // Get the current user

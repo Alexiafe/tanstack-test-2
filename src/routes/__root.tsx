@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 import * as React from "react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import { createServerFn } from "@tanstack/react-start"
@@ -9,6 +10,16 @@ import { NotFound } from "../components/NotFound"
 import appCss from "../styles/app.css?url"
 import { seo } from "../utils/seo"
 import { getSupabaseServerClient } from "../utils/supabase"
+
+// Create a QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+})
 
 const fetchUser = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = getSupabaseServerClient()
@@ -81,9 +92,11 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <QueryClientProvider client={queryClient}>
+      <RootDocument>
+        <Outlet />
+      </RootDocument>
+    </QueryClientProvider>
   )
 }
 
@@ -113,6 +126,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             }}
           >
             Posts
+          </Link>{" "}
+          <Link
+            to="/articles"
+            activeProps={{
+              className: "font-bold",
+            }}
+          >
+            Articles
           </Link>
           <div className="ml-auto">
             {user ? (

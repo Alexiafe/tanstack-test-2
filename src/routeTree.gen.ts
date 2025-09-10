@@ -15,8 +15,11 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedPostsRouteImport } from './routes/_authed/posts'
+import { Route as AuthedArticlesRouteImport } from './routes/_authed/articles'
 import { Route as AuthedPostsIndexRouteImport } from './routes/_authed/posts.index'
+import { Route as AuthedArticlesIndexRouteImport } from './routes/_authed/articles.index'
 import { Route as AuthedPostsPostIdRouteImport } from './routes/_authed/posts.$postId'
+import { Route as AuthedArticlesArticleIdRouteImport } from './routes/_authed/articles.$articleId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -47,15 +50,30 @@ const AuthedPostsRoute = AuthedPostsRouteImport.update({
   path: '/posts',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedArticlesRoute = AuthedArticlesRouteImport.update({
+  id: '/articles',
+  path: '/articles',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedPostsIndexRoute = AuthedPostsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthedPostsRoute,
 } as any)
+const AuthedArticlesIndexRoute = AuthedArticlesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthedArticlesRoute,
+} as any)
 const AuthedPostsPostIdRoute = AuthedPostsPostIdRouteImport.update({
   id: '/$postId',
   path: '/$postId',
   getParentRoute: () => AuthedPostsRoute,
+} as any)
+const AuthedArticlesArticleIdRoute = AuthedArticlesArticleIdRouteImport.update({
+  id: '/$articleId',
+  path: '/$articleId',
+  getParentRoute: () => AuthedArticlesRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -63,8 +81,11 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/signup': typeof SignupRoute
+  '/articles': typeof AuthedArticlesRouteWithChildren
   '/posts': typeof AuthedPostsRouteWithChildren
+  '/articles/$articleId': typeof AuthedArticlesArticleIdRoute
   '/posts/$postId': typeof AuthedPostsPostIdRoute
+  '/articles/': typeof AuthedArticlesIndexRoute
   '/posts/': typeof AuthedPostsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -72,7 +93,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/signup': typeof SignupRoute
+  '/articles/$articleId': typeof AuthedArticlesArticleIdRoute
   '/posts/$postId': typeof AuthedPostsPostIdRoute
+  '/articles': typeof AuthedArticlesIndexRoute
   '/posts': typeof AuthedPostsIndexRoute
 }
 export interface FileRoutesById {
@@ -82,8 +105,11 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/signup': typeof SignupRoute
+  '/_authed/articles': typeof AuthedArticlesRouteWithChildren
   '/_authed/posts': typeof AuthedPostsRouteWithChildren
+  '/_authed/articles/$articleId': typeof AuthedArticlesArticleIdRoute
   '/_authed/posts/$postId': typeof AuthedPostsPostIdRoute
+  '/_authed/articles/': typeof AuthedArticlesIndexRoute
   '/_authed/posts/': typeof AuthedPostsIndexRoute
 }
 export interface FileRouteTypes {
@@ -93,11 +119,22 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/signup'
+    | '/articles'
     | '/posts'
+    | '/articles/$articleId'
     | '/posts/$postId'
+    | '/articles/'
     | '/posts/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/logout' | '/signup' | '/posts/$postId' | '/posts'
+  to:
+    | '/'
+    | '/login'
+    | '/logout'
+    | '/signup'
+    | '/articles/$articleId'
+    | '/posts/$postId'
+    | '/articles'
+    | '/posts'
   id:
     | '__root__'
     | '/'
@@ -105,8 +142,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/signup'
+    | '/_authed/articles'
     | '/_authed/posts'
+    | '/_authed/articles/$articleId'
     | '/_authed/posts/$postId'
+    | '/_authed/articles/'
     | '/_authed/posts/'
   fileRoutesById: FileRoutesById
 }
@@ -162,12 +202,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedPostsRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/articles': {
+      id: '/_authed/articles'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof AuthedArticlesRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/posts/': {
       id: '/_authed/posts/'
       path: '/'
       fullPath: '/posts/'
       preLoaderRoute: typeof AuthedPostsIndexRouteImport
       parentRoute: typeof AuthedPostsRoute
+    }
+    '/_authed/articles/': {
+      id: '/_authed/articles/'
+      path: '/'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof AuthedArticlesIndexRouteImport
+      parentRoute: typeof AuthedArticlesRoute
     }
     '/_authed/posts/$postId': {
       id: '/_authed/posts/$postId'
@@ -176,8 +230,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedPostsPostIdRouteImport
       parentRoute: typeof AuthedPostsRoute
     }
+    '/_authed/articles/$articleId': {
+      id: '/_authed/articles/$articleId'
+      path: '/$articleId'
+      fullPath: '/articles/$articleId'
+      preLoaderRoute: typeof AuthedArticlesArticleIdRouteImport
+      parentRoute: typeof AuthedArticlesRoute
+    }
   }
 }
+
+interface AuthedArticlesRouteChildren {
+  AuthedArticlesArticleIdRoute: typeof AuthedArticlesArticleIdRoute
+  AuthedArticlesIndexRoute: typeof AuthedArticlesIndexRoute
+}
+
+const AuthedArticlesRouteChildren: AuthedArticlesRouteChildren = {
+  AuthedArticlesArticleIdRoute: AuthedArticlesArticleIdRoute,
+  AuthedArticlesIndexRoute: AuthedArticlesIndexRoute,
+}
+
+const AuthedArticlesRouteWithChildren = AuthedArticlesRoute._addFileChildren(
+  AuthedArticlesRouteChildren,
+)
 
 interface AuthedPostsRouteChildren {
   AuthedPostsPostIdRoute: typeof AuthedPostsPostIdRoute
@@ -194,10 +269,12 @@ const AuthedPostsRouteWithChildren = AuthedPostsRoute._addFileChildren(
 )
 
 interface AuthedRouteChildren {
+  AuthedArticlesRoute: typeof AuthedArticlesRouteWithChildren
   AuthedPostsRoute: typeof AuthedPostsRouteWithChildren
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
+  AuthedArticlesRoute: AuthedArticlesRouteWithChildren,
   AuthedPostsRoute: AuthedPostsRouteWithChildren,
 }
 
